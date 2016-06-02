@@ -155,7 +155,7 @@ def create_parser():
                         'output. (0 to disable, default: 0)',
                         default=0).completer=RangeCompleter(0, 0, 200)
     group2.add_argument('--hide', dest='hide_profile', action='store',
-                        choices={'metadata'}, help='hide certain differences')
+                        choices=['metadata'], help='hide certain differences')
 
     group3 = parser.add_argument_group('diff calculation')
     group3.add_argument('--new-file', dest='new_file', action='store_true',
