@@ -439,6 +439,10 @@ def escape_anchor(val):
     return val
 
 def output_difference(difference, print_func, css_url, directory, parents):
+    if Config.hide_profile is not None:
+        if difference.source1 in Config.hide_profile:
+            logger.debug('output for %s is hidden', difference.source1)
+            return
     logger.debug('html output for %s', difference.source1)
     sources = parents + [difference.source1]
     print_func(u'<div class="difference">')
