@@ -34,6 +34,8 @@ from ..missing_file import MissingFile
 
 from .command import Command
 from .specialize import specialize
+from .archive import Archive
+from .libarchive import LibarchiveContainer
 
 try:
     import tlsh
@@ -63,6 +65,39 @@ def compare_root_paths(path1, path2):
     file2 = specialize(FilesystemFile(path2, container=container2))
     return compare_files(file1, file2)
 
+def compare_containers(file1, file2, source=None):
+    logger.debug("Both files are containers.")
+    difference = Difference(None, file1.name, file2.name, source=source)
+    details = []
+    container1 = file1.as_container
+    container2 = file2.as_container
+    details.extend([Difference.from_text(
+        container1.__class__.__name__,
+        container2.__class__.__name__,
+        file1.name,
+        file2.name,
+        source="container type"
+    )])
+    details.extend([Difference.from_text(
+        "\n".join(container1.get_member_names()),
+        "\n".join(container2.get_member_names()),
+        file1.name,
+        file2.name,
+        source="file list"
+    )])
+
+    if isinstance(container1, LibarchiveContainer) == \
+            isinstance(container2, LibarchiveContainer):
+        logger.debug("Comparing content.")
+        details.extend(container1.compare(container2))
+    else:
+        logger.debug("Can't compare libarchive with regular container, "
+                     "falling back to binary diff.")
+        details.extend([file1.compare_bytes(file2, source)])
+    details = [d for d in details if d is not None]
+    difference.add_details(details)
+    return difference
+
 def compare_files(file1, file2, source=None):
     logger.debug(
         "Comparing %s (%s) and %s (%s)",
@@ -86,6 +121,8 @@ def compare_files(file1, file2, source=None):
     elif isinstance(file2, MissingFile):
         file2.other_file = file1
     elif file1.__class__.__name__ != file2.__class__.__name__:
+        if file1.as_container and file2.as_container:
+            return compare_containers(file1, file2, source)
         return file1.compare_bytes(file2, source)
     with profile('compare_files (cumulative)', file1):
         return file1.compare(file2, source)
