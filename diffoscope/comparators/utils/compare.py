@@ -86,14 +86,9 @@ def compare_containers(file1, file2, source=None):
         source="file list"
     )])
 
-    if isinstance(container1, LibarchiveContainer) == \
-            isinstance(container2, LibarchiveContainer):
-        logger.debug("Comparing content.")
-        details.extend(container1.compare(container2))
-    else:
-        logger.debug("Can't compare libarchive with regular container, "
-                     "falling back to binary diff.")
-        details.extend([file1.compare_bytes(file2, source)])
+    logger.debug("Comparing content.")
+    details.extend(container1.compare(container2, source))
+
     details = [d for d in details if d is not None]
     difference.add_details(details)
     return difference
@@ -123,6 +118,9 @@ def compare_files(file1, file2, source=None):
     elif file1.__class__.__name__ != file2.__class__.__name__:
         if file1.as_container and file2.as_container:
             return compare_containers(file1, file2, source)
+        if file1.is_directory() and file2.is_directory():
+            # ZipDirectory, LibarchiveDirectory etc.
+            return None
         return file1.compare_bytes(file2, source)
     with profile('compare_files (cumulative)', file1):
         return file1.compare(file2, source)
