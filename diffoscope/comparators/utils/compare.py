@@ -79,8 +79,8 @@ def compare_containers(file1, file2, source=None):
         source="container type"
     )])
     details.extend([Difference.from_text(
-        "\n".join(container1.get_member_names()),
-        "\n".join(container2.get_member_names()),
+        "\n".join(sorted(container1.get_member_names())) + "\n",
+        "\n".join(sorted(container2.get_member_names())) + "\n",
         file1.name,
         file2.name,
         source="file list"
