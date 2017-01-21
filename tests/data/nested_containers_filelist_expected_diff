@@ -1,0 +1,7 @@
+@@ -1,5 +1,5 @@
+ drwxr-xr-x   0 siamezzze  (1000) siamezzze  (1000)        0 2017-01-21 02:39:53.000000 t0/
+ drwxr-xr-x   0 siamezzze  (1000) siamezzze  (1000)        0 2017-01-21 02:39:53.000000 t0/t00/
+ -rw-r--r--   0 siamezzze  (1000) siamezzze  (1000)       14 2017-01-21 02:39:53.000000 t0/t00/test2
+ lrwxrwxrwx   0 siamezzze  (1000) siamezzze  (1000)        0 2017-01-21 02:39:53.000000 t0/test2.lnk -> t0/t00/test2
+--rw-r--r--   0 siamezzze  (1000) siamezzze  (1000)     1277 2017-01-21 02:39:53.000000 t0/test1
++-rw-r--r--   0 siamezzze  (1000) siamezzze  (1000)     1279 2017-01-21 02:39:53.000000 t0/test1
