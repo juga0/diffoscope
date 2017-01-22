@@ -28,6 +28,7 @@ from diffoscope.tools import tool_required
 from .utils.file import File
 from .utils.archive import Archive
 from .utils.filenames import get_compressed_content_name
+from .utils.specialize import specialize
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,12 @@ class XzContainer(Archive):
 
     def get_member_names(self):
         return [get_compressed_content_name(self.source.path, '.xz')]
+
+    def get_nested_container(self):
+        # If the only member of container is also container, return it.
+        only_member = self.get_member(self.get_member_names()[0])
+        specialize(only_member)
+        return only_member.as_container
 
     @tool_required('xz')
     def extract(self, member_name, dest_dir):

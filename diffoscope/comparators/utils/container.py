@@ -96,10 +96,28 @@ class Container(object, metaclass=abc.ABCMeta):
         for name in self.get_member_names():
             yield name, self.get_member(name)
 
+    def get_nested_container(self):
+        return None
+
     def comparisons(self, other):
         my_members = self.get_members()
         my_reminders = collections.OrderedDict()
         other_members = other.get_members()
+
+        my_nested_container = self.get_nested_container()
+        other_nested_container = other.get_nested_container()
+
+        if my_nested_container and other_nested_container:
+            # If both containers contain one sub-container each,
+            # make sure they get compared no matter their name/type.
+            # (not unpacking them here to preserve structure and metadata).
+            yield my_members.popitem()[1], other_members.popitem()[1], NO_COMMENT
+            return
+        # One of the containers has nested container - unpack it.
+        if my_nested_container:
+            my_members = my_nested_container.get_members()
+        if other_nested_container:
+            other_members = other_nested_container.get_members()
 
         with Progress(max(len(my_members), len(other_members))) as p:
             # keep it sorted like my members
