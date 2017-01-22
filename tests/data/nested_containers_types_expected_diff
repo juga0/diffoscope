@@ -1,3 +1,3 @@
 @@ -1 +1 @@
--GzipContainer
-+Bzip2Container
+-gzip compressed data, was "test0.tar", last modified: Sat Jan 21 02:39:53 2017, from Unix
++bzip2 compressed data, block size = 900k

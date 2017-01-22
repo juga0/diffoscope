@@ -34,8 +34,6 @@ from ..missing_file import MissingFile
 
 from .command import Command
 from .specialize import specialize
-from .archive import Archive
-from .libarchive import LibarchiveContainer
 
 try:
     import tlsh
@@ -72,15 +70,15 @@ def compare_containers(file1, file2, source=None):
     container1 = file1.as_container
     container2 = file2.as_container
     details.extend([Difference.from_text(
-        container1.__class__.__name__,
-        container2.__class__.__name__,
+        file1.magic_file_type,
+        file2.magic_file_type,
         file1.name,
         file2.name,
         source="container type"
     )])
     details.extend([Difference.from_text(
-        "\n".join(sorted(container1.get_member_names())) + "\n",
-        "\n".join(sorted(container2.get_member_names())) + "\n",
+        "\n".join(container1.get_member_names_nested()) + "\n",
+        "\n".join(container2.get_member_names_nested()) + "\n",
         file1.name,
         file2.name,
         source="file list"

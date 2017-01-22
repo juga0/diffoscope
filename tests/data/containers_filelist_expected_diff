@@ -1,8 +1,8 @@
 @@ -1,5 +1,5 @@
 -t0/
 -t0/t00/
-+t0
-+t0/t00
  t0/t00/test2
- t0/test1
++t0/t00
  t0/test2.lnk
+ t0/test1
++t0

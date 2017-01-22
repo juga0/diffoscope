@@ -96,6 +96,15 @@ class Container(object, metaclass=abc.ABCMeta):
         for name in self.get_member_names():
             yield name, self.get_member(name)
 
+    def get_member_names_nested(self):
+        member_names = self.get_member_names()
+        nested_container = self.get_nested_container()
+        if nested_container:
+            member_names += \
+                ['[%s] %s' % (nested_container.source.name, member) for member
+                 in sorted(nested_container.get_member_names())]
+        return member_names
+
     def get_nested_container(self):
         return None
 
