@@ -46,7 +46,7 @@ class TextPresenter(Presenter):
 
     def visit_difference(self, difference):
         if Config().hide_profile is not None and \
-                        difference.source1 in Config().hide_profile:
+                        difference.source1 == Config().hide_profile:
             return
         if self.depth == 0:
             self.output("--- {}".format(difference.source1))

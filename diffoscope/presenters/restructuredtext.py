@@ -31,7 +31,7 @@ class RestructuredTextPresenter(Presenter):
 
     def visit_difference(self, difference):
         if Config().hide_profile is not None and \
-                        difference.source1 in Config().hide_profile:
+                        difference.source1 == Config().hide_profile:
             return
         if difference.source1 == difference.source2:
             self.title(difference.source1)
