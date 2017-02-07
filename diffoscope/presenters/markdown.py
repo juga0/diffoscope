@@ -19,6 +19,8 @@
 
 from .utils import Presenter
 
+from diffoscope.config import Config
+
 
 class MarkdownTextPresenter(Presenter):
     def __init__(self, print_func):
@@ -26,6 +28,9 @@ class MarkdownTextPresenter(Presenter):
         super().__init__()
 
     def visit_difference(self, difference):
+        if Config().hide_profile is not None and \
+                        difference.source1 in Config().hide_profile:
+            return
         if difference.source1 == difference.source2:
             self.title(difference.source1)
         else:

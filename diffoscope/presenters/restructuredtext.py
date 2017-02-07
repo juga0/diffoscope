@@ -19,6 +19,8 @@
 
 from .utils import Presenter
 
+from diffoscope.config import Config
+
 
 class RestructuredTextPresenter(Presenter):
     TITLE_CHARS = '=-`:.\'"~^_*+#'
@@ -28,6 +30,9 @@ class RestructuredTextPresenter(Presenter):
         super().__init__()
 
     def visit_difference(self, difference):
+        if Config().hide_profile is not None and \
+                        difference.source1 in Config().hide_profile:
+            return
         if difference.source1 == difference.source2:
             self.title(difference.source1)
         else:
