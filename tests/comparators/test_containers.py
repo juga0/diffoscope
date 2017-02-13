@@ -27,8 +27,8 @@ from utils.tools import skip_unless_tools_exist
 test_tar_gz = load_fixture('test1.tar.gz')
 test_zip_bz2 = load_fixture('test2.zip.bz2')
 test_zip = load_fixture('test2.zip')
-test_tar = load_fixture('test3.tar')
-test_cpio = load_fixture('test3.cpio')
+test_tar = load_fixture('test1.tar')
+test_cpio = load_fixture('test2.cpio')
 
 @pytest.fixture
 def differences_containers(test_tar, test_cpio):
@@ -44,21 +44,21 @@ def differences_different_levels(test_tar_gz, test_zip):
 
 @skip_unless_tools_exist('cpio')
 def test_file_list(differences_containers):
-    expected_diff = open(data('containers_filelist_expected_diff')).read()
+    expected_diff = get_data('containers_filelist_expected_diff')
     assert differences_containers[1].source1 == 'file list'
     assert differences_containers[1].source2 == 'file list'
     assert differences_containers[1].unified_diff == expected_diff
 
 @skip_unless_tools_exist('cpio')
 def test_types(differences_containers):
-    expected_diff = open(data('containers_types_expected_diff')).read()
+    expected_diff = get_data('containers_types_expected_diff')
     assert differences_containers[0].source1 == 'container type'
     assert differences_containers[0].source2 == 'container type'
     assert differences_containers[0].unified_diff == expected_diff
 
 @skip_unless_tools_exist('cpio')
 def test_content(differences_containers):
-    expected_diff = open(data('containers_content_expected_diff')).read()
+    expected_diff = get_data('text_ascii_expected_diff')
     assert differences_containers[2].unified_diff == expected_diff
 
 @skip_unless_tools_exist('bzip2', 'gzip', 'zipinfo')
