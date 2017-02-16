@@ -27,12 +27,13 @@ from diffoscope.tools import tool_required
 
 from .utils.file import File
 from .utils.archive import Archive
+from .utils.container import OneMemberContainer
 from .utils.filenames import get_compressed_content_name
 
 logger = logging.getLogger(__name__)
 
 
-class DexContainer(Archive):
+class DexContainer(Archive, OneMemberContainer):
     @property
     def path(self):
         return self._path
@@ -44,7 +45,7 @@ class DexContainer(Archive):
         pass
 
     def get_members(self):
-        return collections.OrderedDict({'dex-content': self.get_member(self.get_member_names()[0])})
+        return collections.OrderedDict({'dex-content': self.get_the_only_member()})
 
     def get_member_names(self):
         return [get_compressed_content_name(self.source.path, '.dex') + '.jar']
