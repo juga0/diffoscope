@@ -29,13 +29,13 @@ from diffoscope.difference import Difference
 
 from .utils.file import File
 from .utils.archive import Archive
+from .utils.container import OneMemberContainer
 from .utils.filenames import get_compressed_content_name
-from .utils.specialize import specialize
 
 logger = logging.getLogger(__name__)
 
 
-class GzipContainer(Archive):
+class GzipContainer(Archive, OneMemberContainer):
     def open_archive(self):
         return self
 
@@ -43,16 +43,10 @@ class GzipContainer(Archive):
         pass
 
     def get_members(self):
-        return collections.OrderedDict({'gzip-content': self.get_member(self.get_member_names()[0])})
+        return collections.OrderedDict({'gzip-content': self.get_the_only_member()})
 
     def get_member_names(self):
         return [get_compressed_content_name(self.source.path, '.gz')]
-
-    def get_nested_container(self):
-        # If the only member of container is also container, return it.
-        only_member = self.get_member(self.get_member_names()[0])
-        specialize(only_member)
-        return only_member.as_container
 
     @tool_required('gzip')
     def extract(self, member_name, dest_dir):

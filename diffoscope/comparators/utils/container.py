@@ -28,6 +28,7 @@ from diffoscope.progress import Progress
 from ..missing_file import MissingFile
 
 from .fuzzy import perform_fuzzy_matching
+from .specialize import specialize
 
 NO_COMMENT = None
 
@@ -168,3 +169,14 @@ class MissingContainer(Container):
 
     def get_member(self, member_name):
         return MissingFile('/dev/null')
+
+
+class OneMemberContainer(Container, metaclass=abc.ABCMeta):
+    def get_the_only_member(self):
+        return self.get_member(self.get_member_names()[0])
+
+    def get_nested_container(self):
+        # If the only member of container is also container, return it.
+        only_member = self.get_the_only_member()
+        specialize(only_member)
+        return only_member.as_container
