@@ -45,9 +45,6 @@ class TextPresenter(Presenter):
             self.print_func("Max output size reached.", force=True)
 
     def visit_difference(self, difference):
-        if Config().hide_profile is not None and \
-                        difference.source1 == Config().hide_profile:
-            return
         if self.depth == 0:
             self.output("--- {}".format(difference.source1))
             self.output("+++ {}".format(difference.source2))

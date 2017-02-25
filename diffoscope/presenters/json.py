@@ -38,9 +38,6 @@ class JSONPresenter(Presenter):
         self.print_func(json.dumps(self.root[0], indent=2, sort_keys=True))
 
     def visit_difference(self, difference):
-        if Config().hide_profile is not None and \
-                        difference.source1 == Config().hide_profile:
-            return
         self.current.append({
             'source1': difference.source1,
             'source2': difference.source2,

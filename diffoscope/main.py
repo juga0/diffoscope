@@ -154,8 +154,6 @@ def create_parser():
                         'trying to emit it in a report. This also affects --text '
                         'output. (0 to disable, default: 0)',
                         default=0).completer=RangeCompleter(0, 0, 200)
-    group2.add_argument('--hide', dest='hide_profile', action='store',
-                        choices=['metadata'], help='hide certain differences')
 
     group3 = parser.add_argument_group('diff calculation')
     group3.add_argument('--new-file', dest='new_file', action='store_true',
@@ -163,6 +161,9 @@ def create_parser():
     group3.add_argument('--exclude', dest='excludes', nargs='?',
                         metavar='PATTERN', action='append', default=[],
                         help='Exclude files that match %(metavar)s')
+    group3.add_argument('--hide-timestamp', dest='hide_timestamp',
+                        action='store', choices=['gzip-metadata'],
+                        help='hide certain timestamp differences')
     group3.add_argument('--fuzzy-threshold', dest='fuzzy_threshold', type=int,
                         help='Threshold for fuzzy-matching '
                         '(0 to disable, %(default)s is default, 400 is high fuzziness)',
@@ -254,7 +255,7 @@ def run_diffoscope(parsed_args):
     Config().fuzzy_threshold = parsed_args.fuzzy_threshold
     Config().new_file = parsed_args.new_file
     Config().excludes = parsed_args.excludes
-    Config().hide_profile = parsed_args.hide_profile
+    Config().hide_timestamp = parsed_args.hide_timestamp
     set_locale()
     logger.debug('Starting comparison')
     ProgressManager().setup(parsed_args)
