@@ -164,6 +164,9 @@ def create_parser():
     group3.add_argument('--hide-timestamp', dest='hide_timestamp',
                         action='store', choices=['gzip-metadata'],
                         help='hide certain timestamp differences')
+    group3.add_argument('--hide-section', dest='hide_section',
+                        action='store', choices=['debug-symbols'],
+                        help='hide certain timestamp differences')
     group3.add_argument('--fuzzy-threshold', dest='fuzzy_threshold', type=int,
                         help='Threshold for fuzzy-matching '
                         '(0 to disable, %(default)s is default, 400 is high fuzziness)',
@@ -256,6 +259,7 @@ def run_diffoscope(parsed_args):
     Config().new_file = parsed_args.new_file
     Config().excludes = parsed_args.excludes
     Config().hide_timestamp = parsed_args.hide_timestamp
+    Config().hide_section = parsed_args.hide_section
     set_locale()
     logger.debug('Starting comparison')
     ProgressManager().setup(parsed_args)

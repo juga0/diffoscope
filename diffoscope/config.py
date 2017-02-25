@@ -35,6 +35,7 @@ class Config(object):
     enforce_constraints = True
     excludes = ()
     hide_timestamp = None
+    hide_section = None
 
     _singleton = {}
 

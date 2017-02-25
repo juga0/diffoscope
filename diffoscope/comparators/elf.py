@@ -27,6 +27,7 @@ from diffoscope.exc import OutputParsingError
 from diffoscope.tools import tool_required
 from diffoscope.tempfiles import get_named_temporary_file
 from diffoscope.difference import Difference
+from diffoscope.config import Config
 
 from .deb import DebFile, get_build_id_map
 from .utils.file import File
@@ -411,6 +412,10 @@ class ElfContainer(Container):
 
                 if name.startswith('.debug') or name.startswith('.zdebug'):
                     has_debug_symbols = True
+                    if Config().hide_section == "debug-symbols":
+                        logger.debug("Skipping %s due to request to hide "
+                                     "debug symbols" % name)
+                        continue
 
                 if _should_skip_section(name, type):
                     continue
@@ -432,7 +437,7 @@ class ElfContainer(Container):
             )
             raise OutputParsingError(command, self)
 
-        if not has_debug_symbols:
+        if not has_debug_symbols and Config().hide_section != 'debug-symbols':
             self._install_debug_symbols()
 
     @tool_required('objcopy')

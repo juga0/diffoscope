@@ -22,6 +22,9 @@ import pytest
 
 from diffoscope.main import main
 
+from comparators.utils.tools import skip_unless_tools_exist, \
+    skip_if_binutils_does_not_support_x86, skip_unless_module_exists
+
 
 def run(capsys, filenames, *args):
     with pytest.raises(SystemExit) as exc:
@@ -43,3 +46,15 @@ def test_hide_gzip_metadata(capsys):
     assert ret == 1
     assert '── metadata' not in out
     assert '│   --- test1\n├── +++ test2' in out
+
+@skip_unless_tools_exist('readelf', 'objdump', 'objcopy')
+@skip_if_binutils_does_not_support_x86()
+@skip_unless_module_exists('debian.deb822')
+def test_hide_debugsym(capsys):
+    ret, out = run(capsys, ('dbgsym/add/test-dbgsym_1_amd64.deb',
+                            'dbgsym/mult/test-dbgsym_1_amd64.deb'),
+                   '--hide-section=debug-symbols')
+
+    assert ret == 1
+    assert not any(['test-cases/dbgsym/package/test.c:2' in line for
+                    line in out.split()])
