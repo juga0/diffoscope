@@ -127,6 +127,7 @@ def test_differences_with_dbgsym(dbgsym_differences):
     assert bin_details.source1 == './usr/bin/test'
     assert bin_details.details[1].source1.startswith('objdump')
     assert 'test-cases/dbgsym/package/test.c:2' in bin_details.details[1].unified_diff
+    assert len(bin_details.details[2].comments) == 0
 
 @skip_unless_tools_exist('readelf', 'objdump', 'objcopy')
 @skip_if_binutils_does_not_support_x86()

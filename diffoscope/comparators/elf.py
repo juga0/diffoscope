@@ -487,40 +487,7 @@ class ElfContainer(Container):
         )
         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
-        def objcopy(*args):
-            subprocess.check_call(
-                ('objcopy',) + args,
-                shell=False,
-                stderr=subprocess.DEVNULL,
-        )
-
-        # If #812089 was fixed, we would just do os.link(debug_file.path,
-        # dest_path) but for now, we need to do more complicated things…
-        # 1. Use objcopy to create a file with only the original .gnu_debuglink
-        # section as we will have to update it to get the CRC right.
-        debuglink_path = get_named_temporary_file(
-            prefix='{}.debuglink.'.format(self.source.path),
-        ).name
-
-        objcopy('--only-section=.gnu_debuglink', self.source.path, debuglink_path)
-
-        # 2. Monkey-patch the ElfSection object created for the .gnu_debuglink
-        # to change the path to point to this new file
-        section = self._sections['.gnu_debuglink']
-        class MonkeyPatchedElfSection(section.__class__):
-            @property
-            def path(self):
-                return debuglink_path
-        section.__class__ = MonkeyPatchedElfSection
-
-        # 3. Create a file with the debug symbols in uncompressed form
-        objcopy('--decompress-debug-sections', debug_file.path, dest_path)
-
-        # 4. Update the .gnu_debuglink to this new file so we get the CRC right
-        objcopy('--remove-section=.gnu_debuglink', self.source.path)
-        objcopy('--add-gnu-debuglink={}'.format(dest_path), self.source.path)
-
-        logger.debug('Installed debug symbols at %s', dest_path)
+        os.link(debug_file.path, dest_path)
 
     def get_member_names(self):
         return self._sections.keys()
