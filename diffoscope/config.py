@@ -35,6 +35,16 @@ class Config(object):
     enforce_constraints = True
     excludes = ()
     hide_timestamp = None
+    buildinfo_sections = ['buildinfo-format', 'buildinfo-source',
+                          'buildinfo-binary', 'buildinfo-architecture',
+                          'buildinfo-version', 'buildinfo-binary-only-changes',
+                          'buildinfo-build-origin',
+                          'buildinfo-build-architecture',
+                          'buildinfo-build-date', 'buildinfo-build-path',
+                          'buildinfo-installed-build-depends',
+                          'buildinfo-environment'
+                          ]
+    other_sections = ["debug-symbols"]
     hide_section = None
 
     _singleton = {}

@@ -19,11 +19,13 @@
 
 import os
 import pytest
+import shutil
 
 from diffoscope.main import main
 
 from comparators.utils.tools import skip_unless_tools_exist, \
     skip_if_binutils_does_not_support_x86, skip_unless_module_exists
+from comparators.utils.data import data
 
 
 def run(capsys, filenames, *args):
@@ -58,3 +60,29 @@ def test_hide_debugsym(capsys):
     assert ret == 1
     assert not any(['test-cases/dbgsym/package/test.c:2' in line for
                     line in out.split()])
+
+TEST_DOT_BUILDINFO_FILE1_PATH = data('test1.buildinfo')
+TEST_DOT_BUILDINFO_FILE2_PATH = data('test3.buildinfo')
+TEST_DOT_DSC_FILE1_PATH = data('test1.dsc')
+TEST_DOT_DSC_FILE2_PATH = data('test2.dsc')
+TEST_DEB_FILE1_PATH = data('test1.deb')
+TEST_DEB_FILE2_PATH = data('test2.deb')
+
+@skip_unless_module_exists('debian.deb822')
+def test_hide_buildinfo_section(tmpdir, capsys):
+    tmpdir.mkdir('a')
+    dot_buildinfo1_path = str(tmpdir.join('a/test_1.buildinfo'))
+    shutil.copy(TEST_DOT_BUILDINFO_FILE1_PATH, dot_buildinfo1_path)
+    shutil.copy(TEST_DOT_DSC_FILE1_PATH, str(tmpdir.join('a/test_1.dsc')))
+    shutil.copy(TEST_DEB_FILE1_PATH, str(tmpdir.join('a/test_1_all.deb')))
+    tmpdir.mkdir('b')
+    dot_buildinfo2_path = str(tmpdir.join('b/test_1.buildinfo'))
+    shutil.copy(TEST_DOT_BUILDINFO_FILE2_PATH, dot_buildinfo2_path)
+    shutil.copy(TEST_DOT_DSC_FILE2_PATH, str(tmpdir.join('b/test_1.dsc')))
+    shutil.copy(TEST_DEB_FILE2_PATH, str(tmpdir.join('b/test_1_all.deb')))
+    ret, out = run(capsys, (dot_buildinfo1_path,
+                            dot_buildinfo2_path),
+                   '--hide-section=buildinfo-version')
+
+    assert ret == 1
+    assert "├── Version" not in out
