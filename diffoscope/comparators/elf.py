@@ -412,7 +412,7 @@ class ElfContainer(Container):
 
                 if name.startswith('.debug') or name.startswith('.zdebug'):
                     has_debug_symbols = True
-                    if Config().hide_section == "debug-symbols":
+                    if "debug-symbols" in Config().hide_section:
                         logger.debug("Skipping %s due to request to hide "
                                      "debug symbols" % name)
                         continue
@@ -437,7 +437,7 @@ class ElfContainer(Container):
             )
             raise OutputParsingError(command, self)
 
-        if not has_debug_symbols and Config().hide_section != 'debug-symbols':
+        if not has_debug_symbols and 'debug-symbols' not in Config().hide_section:
             self._install_debug_symbols()
 
     @tool_required('objcopy')

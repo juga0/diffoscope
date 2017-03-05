@@ -162,12 +162,13 @@ def create_parser():
                         metavar='PATTERN', action='append', default=[],
                         help='Exclude files that match %(metavar)s')
     group3.add_argument('--hide-timestamp', dest='hide_timestamp',
-                        action='store', choices=['gzip-metadata'],
-                        help='hide certain timestamp differences')
+                        action='append', choices=['gzip-metadata'],
+                        help='hide certain timestamp differences',
+                        default=[])
     group3.add_argument('--hide-section', dest='hide_section',
-                        action='store', choices=Config().buildinfo_sections +
-                        Config().other_sections,
-                        help='hide certain timestamp differences')
+                        action='append', choices=Config().sections_choices,
+                        help='hide certain timestamp differences',
+                        default=[])
     group3.add_argument('--fuzzy-threshold', dest='fuzzy_threshold', type=int,
                         help='Threshold for fuzzy-matching '
                         '(0 to disable, %(default)s is default, 400 is high fuzziness)',

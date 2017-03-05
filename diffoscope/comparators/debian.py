@@ -126,7 +126,7 @@ class DebControlFile(File):
         for field in sorted(set(self.deb822.keys()).union(set(other.deb822.keys()))):
             if field.startswith('Checksums-') or field == 'Files':
                 continue
-            if Config().hide_section == "buildinfo-" + field.lower():
+            if "buildinfo-" + field.lower() in Config().hide_section:
                 logger.debug("Section %s of %s and %s skipped due to "
                              "hide-section option" %
                              (field, self.path, other.path))

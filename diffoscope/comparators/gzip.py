@@ -64,7 +64,7 @@ class GzipFile(File):
     RE_FILE_TYPE = re.compile(r'^gzip compressed data\b')
 
     def compare_details(self, other, source=None):
-        if Config().hide_timestamp and Config().hide_timestamp == "gzip-metadata":
+        if "gzip-metadata" in Config().hide_timestamp:
             logger.debug("Skipping gzip-metadata")
             return []
         return [Difference.from_text(self.magic_file_type, other.magic_file_type, self, other, source='metadata')]

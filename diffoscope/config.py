@@ -34,18 +34,18 @@ class Config(object):
     fuzzy_threshold = 60
     enforce_constraints = True
     excludes = ()
-    hide_timestamp = None
-    buildinfo_sections = ['buildinfo-format', 'buildinfo-source',
-                          'buildinfo-binary', 'buildinfo-architecture',
-                          'buildinfo-version', 'buildinfo-binary-only-changes',
-                          'buildinfo-build-origin',
-                          'buildinfo-build-architecture',
-                          'buildinfo-build-date', 'buildinfo-build-path',
-                          'buildinfo-installed-build-depends',
-                          'buildinfo-environment'
-                          ]
-    other_sections = ["debug-symbols"]
-    hide_section = None
+    timestamps_choices = ['gzip-metadata']
+    hide_timestamp = []
+    sections_choices = ['buildinfo-format', 'buildinfo-source',
+                        'buildinfo-binary', 'buildinfo-architecture',
+                        'buildinfo-version', 'buildinfo-binary-only-changes',
+                        'buildinfo-build-origin',
+                        'buildinfo-build-architecture',
+                        'buildinfo-build-date', 'buildinfo-build-path',
+                        'buildinfo-installed-build-depends',
+                        'buildinfo-environment',
+                        "debug-symbols", ]
+    hide_section = []
 
     _singleton = {}
 
