@@ -30,6 +30,11 @@ from .diff import diff, reverse_unified_diff
 from .config import Config
 from .profiling import profile
 
+try:
+    str_types = (str, unicode)
+except:
+    str_types = str
+
 DIFF_CHUNK = 4096
 
 logger = logging.getLogger(__name__)
@@ -78,9 +83,9 @@ class Difference(object):
             self._source1 = path1
             self._source2 = path2
         # Ensure renderable types
-        if not isinstance(self._source1, (str, unicode)):
+        if not isinstance(self._source1, str_types):
             raise TypeError("path1/source[0] is not a string")
-        if not isinstance(self._source2, (str, unicode)):
+        if not isinstance(self._source2, str_types):
             raise TypeError("path2/source[1] is not a string")
         # Whether the unified_diff already contains line numbers inside itself
         self._has_internal_linenos = has_internal_linenos
