@@ -224,7 +224,7 @@ class ObjdumpSection(Command):
         return line
 
 class ObjdumpDisassembleSection(ObjdumpSection):
-    RE_SYMBOL_COMMENT = re.compile(r'^( +[0-9a-f]+:[^#]+)# [0-9a-f]+ <[^>]+>$')
+    RE_SYMBOL_COMMENT = re.compile(br'^( +[0-9a-f]+:[^#]+)# [0-9a-f]+ <[^>]+>$')
 
     def objdump_options(self):
         # With '--line-numbers' we get the source filename and line within the

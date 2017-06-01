@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 class Msgunfmt(Command):
-    CHARSET_RE = re.compile(r'^"Content-Type: [^;]+; charset=([^\\]+)\\n"$')
+    CHARSET_RE = re.compile(br'^"Content-Type: [^;]+; charset=([^\\]+)\\n"$')
 
     def __init__(self, *args, **kwargs):
         super(Msgunfmt, self).__init__(*args, **kwargs)
