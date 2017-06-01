@@ -108,6 +108,8 @@ class ComparatorManager(object):
                         'diffoscope.comparators.{}'.format(package)
                     )
                 except ImportError:
+                    import traceback
+                    traceback.print_exc()
                     continue
 
                 self.classes.append(getattr(mod, klass_name))

@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 class CbfsListing(Command):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(CbfsListing, self).__init__(*args, **kwargs)
         self._header_re = re.compile(r'^.*: ([^,]+, bootblocksize [0-9]+, romsize [0-9]+, offset 0x[0-9A-Fa-f]+)$')
 
     @tool_required('cbfstool')

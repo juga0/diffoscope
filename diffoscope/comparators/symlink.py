@@ -53,7 +53,7 @@ class Symlink(File):
         if hasattr(self, '_placeholder'):
             os.remove(self._placeholder)
             del self._placeholder
-        super().cleanup()
+        super(Symlink, self).cleanup()
 
     def compare(self, other, source=None):
         with open(self.path) as my_content, \

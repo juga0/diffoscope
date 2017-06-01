@@ -37,7 +37,7 @@ NO_COMMENT = None
 logger = logging.getLogger(__name__)
 
 
-class Container(object, metaclass=abc.ABCMeta):
+class Container(object):
     def __new__(cls, source):
         if isinstance(source, MissingFile):
             new = super(Container, MissingContainer).__new__(MissingContainer)

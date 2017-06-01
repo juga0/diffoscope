@@ -30,7 +30,7 @@ from .utils.command import Command
 
 class Javap(Command):
     def __init__(self, path, *args, **kwargs):
-        super().__init__(path, *args, **kwargs)
+        super(Javap, self).__init__(path, *args, **kwargs)
         self.real_path = os.path.realpath(path)
 
     @tool_required('javap')

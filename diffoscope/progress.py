@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import print_function, absolute_import, unicode_literals
+
 import os
 import sys
 import json
@@ -29,14 +31,14 @@ class ProgressLoggingHandler(logging.StreamHandler):
 
     def __init__(self, progressbar):
         self.progressbar = progressbar
-        super().__init__()
+        super(ProgressLoggingHandler, self).__init__()
 
     def emit(self, record):
         try:
             # delete the current line (i.e. the progress bar)
             self.stream.write("\r\033[K")
             self.flush()
-            super().emit(record)
+            super(ProgressLoggingHandler, self).emit(record)
             if not self.progressbar.bar.finished:
                 self.progressbar.bar.update()
         except Exception:

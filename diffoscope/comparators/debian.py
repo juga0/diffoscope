@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
+
 import re
 import os.path
 import hashlib
@@ -67,7 +69,7 @@ class DebControlMember(File):
 
 class DebControlContainer(Container):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(DebControlContainer, self).__init__(*args, **kwargs)
         self._version_re = DebControlContainer.get_version_trimming_re(self)
 
     @staticmethod
@@ -179,7 +181,7 @@ class DotChangesFile(DebControlFile):
         return True
 
     def compare(self, other, *args, **kwargs):
-        differences = super().compare(other, *args, **kwargs)
+        differences = super(DotChangesFile, self).compare(other, *args, **kwargs)
 
         if differences is None:
             return None

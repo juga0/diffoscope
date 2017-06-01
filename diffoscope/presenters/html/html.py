@@ -31,6 +31,8 @@
 # Dave Burt <dave (at) burt.id.au> (mainly for html theme)
 #
 
+from __future__ import unicode_literals
+
 import io
 import os
 import re
@@ -537,7 +539,7 @@ def output_html(difference, css_url=None, print_func=None):
     Default presenter, all in one HTML file
     """
     if print_func is None:
-        print_func = print
+        print_func = getattr(__builtins__, "print")
     print_func = create_limited_print_func(print_func, Config().max_report_size)
     try:
         output_header(css_url, print_func)

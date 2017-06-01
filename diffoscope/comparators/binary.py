@@ -25,7 +25,7 @@ from .utils.file import File
 
 class FilesystemFile(File):
     def __init__(self, path, container=None):
-        super().__init__(container=container)
+        super(FilesystemFile, self).__init__(container=container)
         self._name = path
 
     @property

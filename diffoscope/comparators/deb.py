@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+import codecs
 import re
 import logging
 
@@ -101,7 +102,7 @@ class DebFile(File):
         if not hasattr(self, '_control'):
             control_file = self.as_container.control_tar.as_container.lookup_file('./control')
             if control_file:
-                with open(control_file.path, 'rb') as f:
+                with codecs.open(control_file.path, 'rb') as f:
                     self._control = deb822.Deb822(f)
         return self._control
 
@@ -124,7 +125,7 @@ class Md5sumsFile(File):
     def parse(self):
         try:
             md5sums = {}
-            with open(self.path, 'r', encoding='utf-8') as f:
+            with codecs.open(self.path, 'r', encoding='utf-8') as f:
                 for line in f:
                     md5sum, path = re.split(r'\s+', line.strip(), maxsplit=1)
                     md5sums['./%s' % path] = md5sum
@@ -134,7 +135,7 @@ class Md5sumsFile(File):
             return {}
 
     def strip_checksum(self, path):
-        with open(path, 'r', encoding='utf-8') as f:
+        with codecs.open(path, 'r', encoding='utf-8') as f:
             for line in f:
                 yield " ".join(line.split(" ")[2:])
 
@@ -155,7 +156,7 @@ class DebTarContainer(TarContainer):
             other_md5sums = other.source.container.source.container.source.md5sums
         else:
             other_md5sums = {}
-        for my_member, other_member, comment in super().comparisons(other):
+        for my_member, other_member, comment in super(DebTarContainer, self).comparisons(other):
             if my_member.name == other_member.name and \
                my_md5sums.get(my_member.name, 'my') == other_md5sums.get(other_member.name, 'other'):
                 logger.debug('Skip %s: identical md5sum', my_member.name)

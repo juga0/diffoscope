@@ -31,12 +31,12 @@ class JSONPresenter(Presenter):
         self.stack = []
         self.print_func = print_func
 
-        super().__init__()
+        super(JSONPresenter, self).__init__()
 
     def start(self, difference):
         root = []
         self.stack = [root]
-        super().start(difference)
+        super(JSONPresenter, self).start(difference)
 
         root[0][JSON_FORMAT_MAGIC] = JSON_FORMAT_VERSION
         root[0].move_to_end(JSON_FORMAT_MAGIC, last=False)

@@ -20,12 +20,21 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import print_function
+
 import os
 import sys
 import signal
 import logging
 import argparse
 import traceback
+
+try:
+    from subprocess import DEVNULL # py3k
+except ImportError:
+    DEVNULL = open(os.devnull, 'wb')
+    import subprocess
+    subprocess.DEVNULL = DEVNULL
 
 from . import VERSION
 from .path import set_path
@@ -340,7 +349,7 @@ def main(args=None):
     except KeyboardInterrupt:
         logger.info('Keyboard Interrupt')
         sys.exit(2)
-    except BrokenPipeError:
+    except OSError:
         sys.exit(2)
     except Exception:
         traceback.print_exc()

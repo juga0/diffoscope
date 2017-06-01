@@ -32,7 +32,7 @@ from .container import Container
 logger = logging.getLogger(__name__)
 
 
-class Archive(Container, metaclass=abc.ABCMeta):
+class Archive(Container):
     def __new__(cls, source, *args, **kwargs):
         if isinstance(source, MissingFile):
             return super(Container, MissingArchive).__new__(MissingArchive)
@@ -40,7 +40,7 @@ class Archive(Container, metaclass=abc.ABCMeta):
             return super(Container, cls).__new__(cls)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(Archive, self).__init__(*args, **kwargs)
         with profile('open_archive', self):
             self._archive = self.open_archive()
 
@@ -82,7 +82,7 @@ class Archive(Container, metaclass=abc.ABCMeta):
 
 class ArchiveMember(File):
     def __init__(self, container, member_name):
-        super().__init__(container=container)
+        super(ArchiveMember, self).__init__(container=container)
         self._name = member_name
         self._temp_dir = None
         self._path = None
@@ -103,7 +103,7 @@ class ArchiveMember(File):
         if self._temp_dir is not None:
             self._temp_dir.cleanup()
             self._temp_dir = None
-        super().cleanup()
+        super(ArchiveMember, self).cleanup()
 
     def is_directory(self):
         return False

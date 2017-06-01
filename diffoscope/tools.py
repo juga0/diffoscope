@@ -28,7 +28,7 @@ from .profiling import profile
 
 # Memoize calls to ``distutils.spawn.find_executable`` to avoid excessive stat
 # calls
-find_executable = functools.lru_cache()(find_executable)
+#find_executable = functools.lru_cache()(find_executable)
 
 # The output of --help and --list-tools will use the order of this dict.
 # Please keep it alphabetized.

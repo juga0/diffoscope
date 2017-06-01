@@ -31,10 +31,10 @@ logger = logging.getLogger(__name__)
 
 
 class Msgunfmt(Command):
-    CHARSET_RE = re.compile(rb'^"Content-Type: [^;]+; charset=([^\\]+)\\n"$')
+    CHARSET_RE = re.compile(r'^"Content-Type: [^;]+; charset=([^\\]+)\\n"$')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(Msgunfmt, self).__init__(*args, **kwargs)
         self._header = io.BytesIO()
         self._encoding = None
 

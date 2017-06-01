@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import print_function
+
 import re
 import io
 import os
@@ -187,9 +189,10 @@ def run_diff(fifo1, fifo2, end_nl_q1, end_nl_q2):
     return parser.diff
 
 class FIFOFeeder(threading.Thread):
-    def __init__(self, feeder, fifo_path, end_nl_q=None, *, daemon=True):
+    def __init__(self, feeder, fifo_path, end_nl_q=None, daemon=True):
         os.mkfifo(fifo_path)
-        super().__init__(daemon=daemon)
+        super(FIFOFeeder, self).__init__()
+        self.setDaemon(daemon)
         self.feeder = feeder
         self.fifo_path = fifo_path
         self.end_nl_q = Queue() if end_nl_q is None else end_nl_q
@@ -221,17 +224,19 @@ class FIFOFeeder(threading.Thread):
 
             # Now clear the fd's nonblocking flag to let writes block normally.
             fcntl.fcntl(fifo_fd, fcntl.F_SETFL, 0)
-            with open(fifo_fd, 'wb') as fifo:
+            with os.fdopen(fifo_fd, 'wb') as fifo:
                 # The queue works around a unified diff limitation: if there's
                 # no newlines in both don't make it a difference
                 end_nl = self.feeder(fifo)
                 self.end_nl_q.put(end_nl)
         except Exception as error:
+            import traceback
+            traceback.print_exc()
             self._exception = error
 
     def join(self):
         self._want_join.set()
-        super().join()
+        super(FIFOFeeder, self).join()
         if self._exception is not None:
             raise self._exception
 

@@ -36,6 +36,11 @@ try:
 except ImportError:  # noqa
     tlsh = None
 
+try:
+    from os import scandir
+except ImportError:
+    from scandir import scandir
+
 SMALL_FILE_THRESHOLD = 65536 # 64 kiB
 
 logger = logging.getLogger(__name__)
@@ -44,10 +49,10 @@ logger = logging.getLogger(__name__)
 def path_apparent_size(path=".", visited=None):
     # should output the same as `du --apparent-size -bs "$path"`
     if not visited:
-        stat = os.stat(path, follow_symlinks=False)
+        stat = os.lstat(path)
         visited = { stat.st_ino: stat.st_size }
     if os.path.isdir(path) and not os.path.islink(path):
-        for entry in os.scandir(path):
+        for entry in scandir(path):
             inode = entry.inode()
             if inode in visited:
                 continue
@@ -57,7 +62,7 @@ def path_apparent_size(path=".", visited=None):
     return sum(visited.values())
 
 
-class File(object, metaclass=abc.ABCMeta):
+class File(object):
     RE_FILE_TYPE = None
     RE_FILE_EXTENSION = None
 

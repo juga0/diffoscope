@@ -56,7 +56,7 @@ logger = logging.getLogger(__name__)
 
 class Readelf(Command):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(Readelf, self).__init__(*args, **kwargs)
         # we don't care about the name of the archive
         self._archive_re = re.compile(r'^File: %s\(' % re.escape(self.path))
 
@@ -151,7 +151,7 @@ class ReadelfDebugDump(Readelf):
 
     def __init__(self, debug_section_group, *args, **kwargs):
         self._debug_section_group = debug_section_group
-        super().__init__(*args, **kwargs)
+        super(ReadelfDebugDump, self).__init__(*args, **kwargs)
 
     def readelf_options(self):
         return ['--debug-dump=%s' % self._debug_section_group]
@@ -182,7 +182,7 @@ class ReadElfSection(Readelf):
     def __init__(self, path, section_name, *args, **kwargs):
         self._path = path
         self._section_name = section_name
-        super().__init__(path, *args, **kwargs)
+        super(ReadElfSection, self).__init__(path, *args, **kwargs)
 
     @property
     def section_name(self):
@@ -200,7 +200,7 @@ class ObjdumpSection(Command):
         self._path = path
         self._path_bin = path.encode('utf-8')
         self._section_name = section_name
-        super().__init__(path, *args, **kwargs)
+        super(ObjdumpSection, self).__init__(path, *args, **kwargs)
 
     def objdump_options(self):
         return []
@@ -224,7 +224,7 @@ class ObjdumpSection(Command):
         return line
 
 class ObjdumpDisassembleSection(ObjdumpSection):
-    RE_SYMBOL_COMMENT = re.compile(rb'^( +[0-9a-f]+:[^#]+)# [0-9a-f]+ <[^>]+>$')
+    RE_SYMBOL_COMMENT = re.compile(r'^( +[0-9a-f]+:[^#]+)# [0-9a-f]+ <[^>]+>$')
 
     def objdump_options(self):
         # With '--line-numbers' we get the source filename and line within the
@@ -234,7 +234,7 @@ class ObjdumpDisassembleSection(ObjdumpSection):
         return ['--line-numbers', '--disassemble', '--demangle']
 
     def filter(self, line):
-        line = super().filter(line)
+        line = super(ObjdumpDisassembleSection, self).filter(line)
         return ObjdumpDisassembleSection.RE_SYMBOL_COMMENT.sub(r'\1', line)
 
 
@@ -270,7 +270,7 @@ def _should_skip_section(name, type):
 
 class ElfSection(File):
     def __init__(self, elf_container, member_name):
-        super().__init__(container=elf_container)
+        super(ElfSection, self).__init__(container=elf_container)
         self._name = member_name
 
     @property
@@ -281,7 +281,7 @@ class ElfSection(File):
     def progress_name(self):
         return "{} [{}]".format(
             self.container.source.progress_name,
-            super().progress_name,
+            super(ElfSection, self).progress_name,
         )
 
     @property
@@ -385,7 +385,7 @@ class ElfContainer(Container):
 
     @tool_required('readelf')
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(ElfContainer, self).__init__(*args, **kwargs)
         logger.debug("Creating ElfContainer for %s", self.source.path)
 
         cmd = ['readelf', '--wide', '--section-headers', self.source.path]

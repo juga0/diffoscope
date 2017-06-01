@@ -142,7 +142,7 @@ class ApkContainer(Archive):
             differences.append(self.compare_manifests(other))
         except AttributeError:  # no apk-specific methods, e.g. MissingArchive
             pass
-        differences.extend(super().compare(other, *args, **kwargs))
+        differences.extend(super(ApkContainer, self).compare(other, *args, **kwargs))
         return differences
 
 class ApkFile(File):

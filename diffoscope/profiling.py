@@ -70,11 +70,11 @@ class ProfileManager(object):
         with make_printer(parsed_args.profile_output) as fn:
             self.output(fn)
 
-    def output(self, print):
+    def output(self, printf):
         title = "Profiling output for: {}".format(' '.join(sys.argv))
 
-        print(title)
-        print("=" * len(title))
+        printf(title)
+        printf("=" * len(title))
 
         for namespace, keys in sorted(self.data.items(), key=lambda x: x[0]):
             subtitle = "{} (total time: {:.3f}s)".format(
@@ -82,10 +82,10 @@ class ProfileManager(object):
                 sum(x['time'] for x in keys.values()),
             )
 
-            print("\n{}\n{}\n".format(subtitle, "-" * len(subtitle)))
+            printf("\n{}\n{}\n".format(subtitle, "-" * len(subtitle)))
 
             for value, totals in sorted(keys.items(), key=lambda x: x[1]['time'], reverse=True):
-                print("  {:10.3f}s {:5d} call{}    {}".format(
+                printf("  {:10.3f}s {:5d} call{}    {}".format(
                     totals['time'],
                     totals['count'],
                     ' ' if totals['count'] == 1 else 's',

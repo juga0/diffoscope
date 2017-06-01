@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import unicode_literals
+
 import re
 import sys
 import logging
@@ -41,7 +43,7 @@ class TextPresenter(Presenter):
         )
         self.color = color
 
-        super().__init__()
+        super(TextPresenter, self).__init__()
 
     @classmethod
     def run(cls, data, difference, parsed_args):
@@ -57,6 +59,8 @@ class TextPresenter(Presenter):
             try:
                 presenter.start(difference)
             except UnicodeEncodeError:
+                import traceback
+                traceback.print_exc()
                 logger.critical(
                     "Console is unable to print Unicode characters. Set e.g. "
                     "PYTHONIOENCODING=utf-8"
@@ -65,7 +69,7 @@ class TextPresenter(Presenter):
 
     def start(self, difference):
         try:
-            super().start(difference)
+            super(TextPresenter, self).start(difference)
         except PrintLimitReached:
             self.print_func("Max output size reached.", force=True)
 

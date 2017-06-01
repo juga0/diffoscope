@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import print_function
+
 import signal
 import hashlib
 import logging
@@ -76,9 +78,9 @@ class Difference(object):
             self._source1 = path1
             self._source2 = path2
         # Ensure renderable types
-        if not isinstance(self._source1, str):
+        if not isinstance(self._source1, (str, unicode)):
             raise TypeError("path1/source[0] is not a string")
-        if not isinstance(self._source2, str):
+        if not isinstance(self._source2, (str, unicode)):
             raise TypeError("path2/source[1] is not a string")
         # Whether the unified_diff already contains line numbers inside itself
         self._has_internal_linenos = has_internal_linenos

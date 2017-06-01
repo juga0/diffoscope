@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 
 import time
 import os.path
@@ -95,7 +96,7 @@ def list_libarchive(path):
 
 class LibarchiveMember(ArchiveMember):
     def __init__(self, archive, entry):
-        super().__init__(archive, entry.pathname)
+        super(LibarchiveMember, self).__init__(archive, entry.pathname)
 
     def is_directory(self):
         return False
@@ -229,7 +230,8 @@ class LibarchiveContainer(Archive):
 
                 logger.debug("Extracting %s to %s", entry.pathname, dst)
 
-                os.makedirs(os.path.dirname(dst), exist_ok=True)
+                if not os.path.exists(os.path.dirname(dst)):
+                    os.makedirs(os.path.dirname(dst))
                 try:
                     with open(dst, 'wb') as f:
                         for block in entry.get_blocks():
@@ -246,4 +248,4 @@ class LibarchiveContainer(Archive):
         def hide_trivial_dirs(item):
             file1, file2, comment = item
             return not (isinstance(file1, Directory) and isinstance(file2, Directory) and comment is None)
-        return filter(hide_trivial_dirs, super().comparisons(other))
+        return filter(hide_trivial_dirs, super(LibarchiveContainer, self).comparisons(other))

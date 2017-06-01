@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with diffoscope.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
+
 import logging
 
 
@@ -33,3 +35,6 @@ def setup_logging(debug, log_handler):
         '%Y-%m-%d %H:%M:%S',
     )
     ch.setFormatter(formatter)
+
+# helps us avoid "absolute_import" in all modules that "import logging"
+getLogger = logging.getLogger

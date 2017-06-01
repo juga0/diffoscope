@@ -20,19 +20,34 @@
 import io
 import abc
 import logging
-import shlex
 import subprocess
 import threading
+
+try:
+    from shlex import quote as shlex_quote
+except ImportError:
+    import re
+    _find_unsafe = re.compile(r'[^\w@%+=:,./-]').search
+    def shlex_quote(s):
+        """Return a shell-escaped version of the string *s*."""
+        if not s:
+            return "''"
+        if _find_unsafe(s) is None:
+            return s
+
+        # use single quotes, and put single quotes into double quotes
+        # the string $'b is then quoted as '$'"'"'b'
+        return "'" + s.replace("'", "'\"'\"'") + "'"
 
 logger = logging.getLogger(__name__)
 
 
-class Command(object, metaclass=abc.ABCMeta):
+class Command(object):
     def __init__(self, path):
         self._path = path
 
     def start(self):
-        logger.debug("Executing %s", ' '.join([shlex.quote(x) for x in self.cmdline()]))
+        logger.debug("Executing %s", ' '.join([shlex_quote(x) for x in self.cmdline()]))
         self._process = subprocess.Popen(self.cmdline(),
                                          shell=False, close_fds=True,
                                          env=self.env(),
@@ -61,7 +76,7 @@ class Command(object, metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     def shell_cmdline(self):
-        return ' '.join(map(lambda x: '{}' if x == self.path else shlex.quote(x), self.cmdline()))
+        return ' '.join(map(lambda x: '{}' if x == self.path else shlex_quote(x), self.cmdline()))
 
     def env(self):
         return None # inherit parent environment by default
@@ -92,7 +107,7 @@ class Command(object, metaclass=abc.ABCMeta):
         returncode = self._process.wait()
         logger.debug(
             "%s returned (exit code: %d)",
-            ' '.join([shlex.quote(x) for x in self.cmdline()]),
+            ' '.join([shlex_quote(x) for x in self.cmdline()]),
             returncode,
         )
         return returncode
