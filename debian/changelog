@@ -1,3 +1,11 @@
+diffoscope (83~bpo9+1) stretch-backports; urgency=medium
+
+  * Rebuild for stretch-backports.
+  * d/rules: bump backport number in the version sanity check, to allow for
+    stretch-backports.
+
+ -- Mattia Rizzolo <mattia@debian.org>  Mon, 26 Jun 2017 22:56:36 +0200
+
 diffoscope (83) unstable; urgency=medium
 
   [ Chris Lamb ]
