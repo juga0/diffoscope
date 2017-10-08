@@ -106,4 +106,4 @@ def test_different_content_bzip2_xz_meta(differences_different_bzip2_xz):
 
 def test_different_content_bzip2_xz_diff(differences_different_bzip2_xz):
     expected_diff = get_data('containers/different_files_expected_bzip2_xz_diff')
-    assert differences_different_bzip2_xz[0].details[1].unified_diff == expected_diff
+    assert differences_different_bzip2_xz[1].details[1].unified_diff == expected_diff

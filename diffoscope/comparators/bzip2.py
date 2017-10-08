@@ -23,6 +23,8 @@ import logging
 import subprocess
 
 from diffoscope.tools import tool_required
+from diffoscope.difference import Difference
+
 
 from .utils.file import File
 from .utils.archive import Archive
@@ -54,3 +56,10 @@ class Bzip2Container(Archive):
 class Bzip2File(File):
     CONTAINER_CLASS = Bzip2Container
     FILE_TYPE_RE = re.compile(r'^bzip2 compressed data\b')
+
+    # Work around file(1) Debian bug #876316
+    FALLBACK_FILE_EXTENSION_SUFFIX = ".bz2"
+    FALLBACK_FILE_TYPE_HEADER_PREFIX = b"\x42\x5A\x68"
+
+    def compare_details(self, other, source=None):
+        return [Difference.from_text(self.magic_file_type, other.magic_file_type, self, other, source='metadata')]
